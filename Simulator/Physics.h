@@ -10,7 +10,26 @@
 class Physics
 {
 private:
+	sf::RenderWindow* window;
+	sf::VideoMode videoMode;
+	sf::Event ev;
+
+	sf::CircleShape ball;
+
+	void initWindow();
+	void initVariable();
 
 public:
+	Physics();
+
+	const bool running() const;
+
+	void pollEvents();
+
+	void spawnBall();
+	void update();
+
+	void renderBall();
+	void render();
 
 };
