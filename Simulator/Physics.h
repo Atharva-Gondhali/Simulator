@@ -16,6 +16,18 @@ private:
 
 	sf::CircleShape ball;
 
+	//Gravity
+	int gravity;
+	int mass;
+
+	//Drag
+	int diameter;
+	int densityAir;
+
+	const int viscosity = 0.000018;
+	const int pi = 3.14;
+	const int dragCoeff = 0.47;
+
 	void initWindow();
 	void initVariable();
 
