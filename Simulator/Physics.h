@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -16,20 +16,33 @@ private:
 
 	sf::CircleShape ball;
 
+	float vel;
+	float velX;
+	float velY;
+	float angle;
+
+
 	//Gravity
-	int gravity;
-	int mass;
+	float gravity;
+	float mass;
 
 	//Drag
-	int diameter;
-	int densityAir;
+	float diameter;
+	float densityAir;
 
-	const int viscosity = 0.000018;
-	const int pi = 3.14;
-	const int dragCoeff = 0.47;
+	//Acceln
+	float verticalAcceln;
+	float horizontalAcceln;
+
+	const float pi = 3.14f;
+	const float viscosity = 0.00001f;
+	const float dragCoeff = 0.47f;
 
 	void initWindow();
 	void initVariable();
+	void initAcceln();
+	
+	void projectCalc();
 
 public:
 	Physics();
@@ -39,6 +52,7 @@ public:
 	void pollEvents();
 
 	void spawnBall();
+	void updateBall();
 	void update();
 
 	void renderBall();
