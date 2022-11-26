@@ -11,8 +11,8 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	this->ball.setRadius(10.f);
-	vel = 41.6f;
-	angle = 20.f;
+	vel = 27.7f;
+	angle = 45.f;
 	velX = vel * cos(angle * (3.14f / 180.f));
 	velY = -(vel * sin(angle * (3.14f / 180.f)));
 	gravity = 9.8f;
