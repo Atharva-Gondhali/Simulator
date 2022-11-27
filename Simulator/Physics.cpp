@@ -12,11 +12,6 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	this->ball.setRadius(10.f);
-
-	vel = 27.7f;
-	angle = 45.f;
-	velX = vel * cos(angle * (3.14f / 180.f));
-	velY = -(vel * sin(angle * (3.14f / 180.f)));
 }
 
 Physics::Physics()
@@ -41,26 +36,51 @@ void Physics::pollEvents()
 		case sf::Event::Closed:
 			this->window->close();
 			break;
+		case sf::Event::MouseButtonReleased:
+			this->strike();
+			break;
  		}
 	}
 }
 
 void Physics::linePhy()
 {
-	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
-	this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 	{
+		this->mousePosWindow = sf::Mouse::getPosition(*this->window);
+		this->mousePosView = this->window->mapPixelToCoords(this->mousePosWindow);
+
 		this->line[0].position = this->mousePosView;
 		this->line[1].position = sf::Vector2f(this->ball.getPosition().x + 10.f, this->ball.getPosition().y + 10.f);
 		this->line[0].color = ball.getFillColor();
 		this->line[1].color = sf::Color::White;
+		//std::cout << this->mousePosView.x << " " << this->mousePosView.y << "\n";
 	}
 	else
 	{
 		this->line[0].position = sf::Vector2f(0.f, 0.f);
 		this->line[1].position = sf::Vector2f(0.f, 0.f);
 		this->line->color = sf::Color::Black;
+	}
+}
+
+void Physics::strike()
+{
+	float distX, distY;
+	distX = this->ball.getPosition().x - this->mousePosView.x;
+	distY = this->ball.getPosition().y - this->mousePosView.y;
+
+	angle = atanf(distY / distX);
+	
+	vel = sqrtf(powf(distX, 2.f) + powf(distY, 2.f));
+
+	velX = vel * cos(angle);
+	velY = vel * sin(angle);
+
+	if ((distX < 0 && distY < 0) || (distX < 0 && distY > 0))
+	{
+		velX *= -1;
+		velY *= -1;
 	}
 }
 
@@ -72,6 +92,7 @@ void Physics::spawnBall()
 
 void Physics::updateBall()
 {
+	this->ball.move(0.05f * velX, 0.05f * velY);
 }
 
 void Physics::update()
