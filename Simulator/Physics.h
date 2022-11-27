@@ -35,6 +35,7 @@ private:
 
 
 	void pollEvents();
+	void checkBounds();
 	void linePhy();
 	void strike();
 	void spawnBall();

@@ -43,6 +43,18 @@ void Physics::pollEvents()
 	}
 }
 
+void Physics::checkBounds()
+{
+	if (!(this->ball.getPosition().x >= 0.f) || !(this->ball.getPosition().x <= 1260.f)) 
+	{
+		velX *= -1;
+	}
+	if (!(this->ball.getPosition().y >= 0.f) || !(this->ball.getPosition().y <= 700.f))
+	{
+		velY *=-1;
+	}
+}
+
 void Physics::linePhy()
 {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -99,6 +111,7 @@ void Physics::update()
 	this->pollEvents();
 	this->linePhy();
 	this->updateBall();
+	this->checkBounds();
 }
 
 void Physics::renderBall()
