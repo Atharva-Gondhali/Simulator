@@ -54,7 +54,6 @@ void Physics::linePhy()
 		this->line[1].position = sf::Vector2f(this->ball.getPosition().x + 10.f, this->ball.getPosition().y + 10.f);
 		this->line[0].color = ball.getFillColor();
 		this->line[1].color = sf::Color::White;
-		//std::cout << this->mousePosView.x << " " << this->mousePosView.y << "\n";
 	}
 	else
 	{
