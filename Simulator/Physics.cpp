@@ -45,11 +45,11 @@ void Physics::pollEvents()
 
 void Physics::checkBounds()
 {
-	if (!(this->ball.getPosition().x >= 0.f) || !(this->ball.getPosition().x <= 1260.f)) 
+	if (!(this->ball.getPosition().x > -1.f) || !(this->ball.getPosition().x < 1260.f)) 
 	{
 		velX *= -1;
 	}
-	if (!(this->ball.getPosition().y >= 0.f) || !(this->ball.getPosition().y <= 700.f))
+	if (!(this->ball.getPosition().y > -1.f) || !(this->ball.getPosition().y < 700.f))
 	{
 		velY *=-1;
 	}
