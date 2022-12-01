@@ -6,7 +6,7 @@ void Physics::initWindow()
 	this->videoMode.width = 1280;
 	this->settings.antialiasingLevel = 8;
 	this->window = new sf::RenderWindow(this->videoMode, "Simulator", sf::Style::Titlebar | sf::Style::Close, settings);
-	this->window->setFramerateLimit(60);
+	this->window->setFramerateLimit(150);
 }
 
 void Physics::initVariable()
@@ -103,7 +103,7 @@ void Physics::spawnBall()
 
 void Physics::updateBall()
 {
-	this->ball.move(0.05f * velX, 0.05f * velY);
+	this->ball.move(0.0067f * velX, 0.0067f * velY);
 }
 
 void Physics::update()
