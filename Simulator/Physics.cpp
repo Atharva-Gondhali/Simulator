@@ -11,57 +11,66 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	this->ball.setRadius(10.f);
-	vel = 27.7f;
+	vel = 13.8f;
 	angle = 45.f;
 	velX = vel * cos(angle * (3.14f / 180.f));
-	velY = -(vel * sin(angle * (3.14f / 180.f)));
-	gravity = 9.8f;
-	mass = 10.f;
+	velY = vel * sin(angle * (3.14f / 180.f));
+	mass = 1.f;
+	gravity = mass * 9.8f;
 	diameter = 0.08f;
 	densityAir = 1.2f;
 }
 
-void Physics::initAcceln()
+
+
+void Physics::updateMotion()
 {
-	float reynolds, forceGravity, forceDrag;
+	float reynolds, forceDrag_x, forceDrag_y;
 
-	forceGravity = mass * gravity;
-
-	reynolds  = (densityAir * diameter * velX) / viscosity;
+	reynolds = (densityAir * diameter * velX) / viscosity;
 	if (reynolds > 1)
 	{
-		forceDrag = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(velX, 2.f));
+		forceDrag_x = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(velX, 2.f));
+		forceDrag_y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(velY, 2.f));
 	}
 	else
 	{
-		forceDrag = 6.f * pi * viscosity * (diameter / 2.f) * velX;
+		forceDrag_x = 6.f * pi * viscosity * (diameter / 2.f) * velX;
+		forceDrag_y = 6.f * pi * viscosity * (diameter / 2.f) * velY;
 	}
-	verticalAcceln = -((forceGravity / mass) / 10);
-	horizontalAcceln = -((forceDrag / mass) / 10);
-}
 
-void Physics::projectCalc()
-{
+	std::cout << forceDrag_x << " " << forceDrag_y << " " << gravity << "\n";
+
+	acc_x = -(forceDrag_x / mass);
+	if (velY > 0)
+	{
+		acc_y = -((gravity + forceDrag_y) / mass);
+	}
+	else
+	{
+		acc_y = ((gravity - forceDrag_y) / mass);
+	}
+
 	// v sqrt(2a + u2)
 	float t_velX, t_velY;
 	if (velX < 0)
 	{
-		t_velX = -powf(velX, 2.f) + (2.f * horizontalAcceln);
+		t_velX = -(powf(velX, 2.f) + (2.f * acc_x));
 	}
 	else
 	{
-		t_velX = powf(velX, 2.f) + (2.f * horizontalAcceln);
+		t_velX = powf(velX, 2.f) + (2.f * acc_x);
 	}
 	if (velY < 0)
 	{
-		t_velY = -powf(velY, 2.f) - (2.f * verticalAcceln) ;
+		t_velY = -(powf(velY, 2.f) + (2.f * acc_y));
 	}
 	else
 	{
-		t_velY = powf(velY, 2.f) - (2.f * verticalAcceln) ;
+		t_velY = powf(velY, 2.f) + (2.f * acc_y) ;
 	}
-	
-	if (t_velX > 0) 
+
+	if (t_velX > 0)
 	{
 		velX = sqrt(t_velX);
 	}
@@ -82,9 +91,7 @@ void Physics::projectCalc()
 Physics::Physics()
 {
 	this->initVariable();
-	this->initAcceln();
 	this->initWindow();
-
 	this->spawnBall();
 }
 
@@ -102,21 +109,25 @@ void Physics::pollEvents()
 		case sf::Event::Closed:
 			this->window->close();
 			break;
+
+		case sf::Event::MouseButtonPressed:
+			start = true;
+			break;
 		}
 	}
 }
 
 void Physics::spawnBall()
 {
-	this->ball.setPosition(0.f, 720.f);
+	this->ball.setPosition(640.f, 360.f);
 	this->ball.setFillColor(sf::Color::Blue);
 }
 
 void Physics::updateBall()
 {
 	std::cout << velX << " " << velY << "\n";
-	projectCalc();
-	this->ball.move(0.167f * velX, 0.167f * velY);
+    updateMotion();
+	this->ball.move(sf::Vector2f(velX / 6 + 5, -(velY / 6 + 5)));
 }
 
 void Physics::update()

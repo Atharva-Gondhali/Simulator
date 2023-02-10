@@ -31,8 +31,8 @@ private:
 	float densityAir;
 
 	//Acceln
-	float verticalAcceln;
-	float horizontalAcceln;
+	float acc_x;
+	float acc_y;
 
 	const float pi = 3.14f;
 	const float viscosity = 0.00001f;
@@ -40,13 +40,13 @@ private:
 
 	void initWindow();
 	void initVariable();
-	void initAcceln();
 	
-	void projectCalc();
+	void updateMotion();
 
 public:
 	Physics();
 
+	bool start = false;
 	const bool running() const;
 
 	void pollEvents();
