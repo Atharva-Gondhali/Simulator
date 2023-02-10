@@ -8,10 +8,7 @@ int main()
 
 	while(physics.running())
 	{
-		if (physics.start == true)
-		{
-			physics.update();
-		}
+		physics.update();
 		physics.render();
 	}
 

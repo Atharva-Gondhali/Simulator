@@ -119,21 +119,24 @@ void Physics::pollEvents()
 
 void Physics::spawnBall()
 {
-	this->ball.setPosition(640.f, 360.f);
+	this->ball.setPosition(0.f, 720.f);
 	this->ball.setFillColor(sf::Color::Blue);
 }
 
 void Physics::updateBall()
 {
 	std::cout << velX << " " << velY << "\n";
-    updateMotion();
+    this->updateMotion();
 	this->ball.move(sf::Vector2f(velX / 6 + 5, -(velY / 6 + 5)));
 }
 
 void Physics::update()
 {
 	this->pollEvents();
-	this->updateBall();
+	if (start == true)
+	{
+		this->updateBall();
+	}
 }
 
 void Physics::renderBall()
