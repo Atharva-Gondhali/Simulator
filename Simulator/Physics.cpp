@@ -4,38 +4,46 @@ void Physics::initWindow()
 {
 	this->videoMode.height = 720;
 	this->videoMode.width = 1280;
-	this->window = new sf::RenderWindow(this->videoMode, "Simulator", sf::Style::Titlebar | sf::Style::Close);
+	this->settings.antialiasingLevel = 8;
+	this->window = new sf::RenderWindow(this->videoMode, "Simulator", sf::Style::Titlebar | sf::Style::Close, settings);
 	this->window->setFramerateLimit(60);
 }
 
 void Physics::initVariable()
 {
 	this->ball.setRadius(10.f);
-	vel = 13.8f;
+	vel = 20.f;
 	angle = 45.f;
 	velX = vel * cos(angle * (3.14f / 180.f));
 	velY = vel * sin(angle * (3.14f / 180.f));
 	mass = 1.f;
 	gravity = mass * 9.8f;
 	diameter = 0.08f;
-	densityAir = 1.2f;
+	densityAir = 50.f;
 }
 
 
 
 void Physics::updateMotion()
 {
-	float reynolds, forceDrag_x, forceDrag_y;
+	float reynolds_x, reynolds_y, forceDrag_x, forceDrag_y;
 
-	reynolds = (densityAir * diameter * velX) / viscosity;
-	if (reynolds > 1)
+	reynolds_x = (densityAir * diameter * velX) / viscosity;
+	reynolds_y = (densityAir * diameter * velY) / viscosity;
+	if (reynolds_x > 1)
 	{
 		forceDrag_x = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(velX, 2.f));
-		forceDrag_y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(velY, 2.f));
 	}
 	else
 	{
 		forceDrag_x = 6.f * pi * viscosity * (diameter / 2.f) * velX;
+	}
+	if (reynolds_y > 1)
+	{
+		forceDrag_y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(velY, 2.f));
+	}
+	else
+	{
 		forceDrag_y = 6.f * pi * viscosity * (diameter / 2.f) * velY;
 	}
 

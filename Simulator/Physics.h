@@ -13,7 +13,7 @@ private:
 	sf::RenderWindow* window;
 	sf::VideoMode videoMode;
 	sf::Event ev;
-
+	sf::ContextSettings settings;
 	sf::CircleShape ball;
 
 	float vel;
