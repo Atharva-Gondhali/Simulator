@@ -16,10 +16,13 @@ private:
 	sf::ContextSettings settings;
 	sf::CircleShape ball;
 
+	bool start = false;
+
 	float vel;
 	float velX;
 	float velY;
 	float angle;
+	float scale;
 
 
 	//Gravity
@@ -40,22 +43,19 @@ private:
 
 	void initWindow();
 	void initVariable();
-	
 	void updateMotion();
+	void renderBall();
+	void spawnBall();
+	void updateBall();
+	void pollEvents();
 
 public:
 	Physics();
 
-	bool start = false;
 	const bool running() const;
 
-	void pollEvents();
-
-	void spawnBall();
-	void updateBall();
 	void update();
 
-	void renderBall();
 	void render();
 
 };

@@ -12,6 +12,7 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	this->ball.setRadius(10.f);
+	scale = 6;
 	vel = 20.f;
 	angle = 45.f;
 	velX = vel * cos(angle * (3.14f / 180.f));
@@ -119,7 +120,14 @@ void Physics::pollEvents()
 			break;
 
 		case sf::Event::MouseButtonPressed:
-			start = true;
+			if(start)
+			{
+				start = false;
+			}
+			else
+			{
+				start = true;
+			}
 			break;
 		}
 	}
@@ -135,7 +143,7 @@ void Physics::updateBall()
 {
 	std::cout << velX << " " << velY << "\n";
     this->updateMotion();
-	this->ball.move(sf::Vector2f(velX / 6 + 5, -(velY / 6 + 5)));
+	this->ball.move(sf::Vector2f(velX / 6 + scale, -(velY / 6 + scale)));
 }
 
 void Physics::update()
