@@ -12,11 +12,10 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	mass = 1.f;
-	scale = 10;
 	angle = 45.f;
-	mainVel = 14.f;
+	mainVel = 70.f * (5.f / 18.f);
 	diameter = 0.08f;
-	densityAir = 50.f;
+	densityAir = 1.29f;
 	gravity = mass * 9.8f;
 	this->ball.setRadius(10.f);
 	this->learpVel.x = mainVel * cos(angle * (pi / 180));
@@ -143,28 +142,11 @@ void Physics::spawnBall()
 
 void Physics::updateBall()
 {
+	this->updateMotion();
+	this->vel.x += (this->learpVel.x - this->vel.x) / 60;
+	this->vel.y += (this->learpVel.y - this->vel.y) / 60;
+
 	std::cout << this->vel.x << " " << this->vel.y << "\n";
-
-
-	if (counter > 10)
-	{
-		this->updateMotion();
-		counter = 0;
-	}
-	else
-	{
-		if (counter == 0)
-		{
-			this->updateMotion();
-		}
-			
-		this->vel.x += (this->learpVel.x - this->vel.x) / scale;
-		this->vel.y += (this->learpVel.y - this->vel.y) / scale;
-
-		counter++;
-	}
-
-
 	this->ball.move(sf::Vector2f(this->vel.x, -this->vel.y));
 	this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
 }

@@ -18,9 +18,9 @@ private:
 	bool start = false;
 
 	float angle;
-	float scale;
 	float mainVel;
 	sf::Vector2f vel;
+	sf::Vector2f diffVel;
 	sf::Vector2f learpVel;
 
 
