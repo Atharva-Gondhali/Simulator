@@ -28,38 +28,37 @@ void Physics::initVariable()
 
 void Physics::updateMotion()
 {
-	
-	float reynolds_x, reynolds_y, forceDrag_x, forceDrag_y;
+	sf::Vector2f reynolds, forceDrag;
 
-	reynolds_x = (densityAir * diameter * learpVel.x) / viscosity;
-	reynolds_y = (densityAir * diameter * learpVel.y) / viscosity;
-	if (reynolds_x > 1)
+	reynolds.x = (densityAir * diameter * learpVel.x) / viscosity;
+	reynolds.y = (densityAir * diameter * learpVel.y) / viscosity;
+	if (reynolds.x > 1)
 	{
-		forceDrag_x = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(learpVel.x, 2.f));
+		forceDrag.x = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(learpVel.x, 2.f));
 	}
 	else
 	{
-		forceDrag_x = 6.f * pi * viscosity * (diameter / 2.f) * learpVel.x;
+		forceDrag.x = 6.f * pi * viscosity * (diameter / 2.f) * learpVel.x;
 	}
-	if (reynolds_y > 1)
+	if (reynolds.y > 1)
 	{
-		forceDrag_y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(learpVel.y, 2.f));
+		forceDrag.y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(learpVel.y, 2.f));
 	}
 	else
 	{
-		forceDrag_y = 6.f * pi * viscosity * (diameter / 2.f) * learpVel.y;
+		forceDrag.y = 6.f * pi * viscosity * (diameter / 2.f) * learpVel.y;
 	}
 
-	//std::cout << forceDrag_x << " " << forceDrag_y << " " << gravity << "\n";
+	//std::cout << forceDrag.x << " " << forceDrag.y << " " << gravity << "\n";
 
-	acc_x = -(forceDrag_x / mass);
+	acc_x = -(forceDrag.x / mass);
 	if (learpVel.y > 0)
 	{
-		acc_y = -((gravity + forceDrag_y) / mass);
+		acc_y = -((gravity + forceDrag.y) / mass);
 	}
 	else
 	{
-		acc_y = ((gravity - forceDrag_y) / mass);
+		acc_y = ((gravity - forceDrag.y) / mass);
 	}
 
 	// v sqrt(2a + u2)
