@@ -18,10 +18,11 @@ private:
 	std::vector<sf::Vertex> vertices;
 
 	bool start = false;
+	int counter = 0;
 
-	float vel;
-	float velX;
-	float velY;
+	float mainVel;
+	sf::Vector2f vel;
+	sf::Vector2f learpVel;
 	float angle;
 	float scale;
 
