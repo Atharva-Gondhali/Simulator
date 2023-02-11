@@ -11,90 +11,90 @@ void Physics::initWindow()
 
 void Physics::initVariable()
 {
-	this->ball.setRadius(10.f);
-	scale = 6;
-	mainVel = 14.f;
-	angle = 1.047f;
-	learpVel.x = mainVel * cos(angle);
-	learpVel.y = mainVel * sin(angle);
-	vel = sf::Vector2f(learpVel.x, learpVel.y);
 	mass = 1.f;
-	gravity = mass * 9.8f;
+	scale = 10;
+	angle = 45.f;
+	mainVel = 14.f;
 	diameter = 0.08f;
 	densityAir = 50.f;
+	gravity = mass * 9.8f;
+	this->ball.setRadius(10.f);
+	this->learpVel.x = mainVel * cos(angle * (pi / 180));
+	this->learpVel.y = mainVel * sin(angle * (pi / 180));
+	this->vel = sf::Vector2f(this->learpVel.x, this->learpVel.y);
 }
 
 
 
 void Physics::updateMotion()
 {
-	sf::Vector2f reynolds, forceDrag;
+	sf::Vector2f reynolds, forceDrag, acc, tempVel;
 
-	reynolds.x = (densityAir * diameter * learpVel.x) / viscosity;
-	reynolds.y = (densityAir * diameter * learpVel.y) / viscosity;
+	reynolds.x = (densityAir * diameter * this->learpVel.x) / viscosity;
+	reynolds.y = (densityAir * diameter * this->learpVel.y) / viscosity;
+
 	if (reynolds.x > 1)
 	{
-		forceDrag.x = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(learpVel.x, 2.f));
+		forceDrag.x = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(this->learpVel.x, 2.f));
 	}
 	else
 	{
-		forceDrag.x = 6.f * pi * viscosity * (diameter / 2.f) * learpVel.x;
+		forceDrag.x = 6.f * pi * viscosity * (diameter / 2.f) * this->learpVel.x;
 	}
 	if (reynolds.y > 1)
 	{
-		forceDrag.y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(learpVel.y, 2.f));
+		forceDrag.y = 0.5f * densityAir * dragCoeff * (pi * powf(diameter / 2.f, 2.f)) * (powf(this->learpVel.y, 2.f));
 	}
 	else
 	{
-		forceDrag.y = 6.f * pi * viscosity * (diameter / 2.f) * learpVel.y;
+		forceDrag.y = 6.f * pi * viscosity * (diameter / 2.f) * this->learpVel.y;
 	}
 
-	//std::cout << forceDrag.x << " " << forceDrag.y << " " << gravity << "\n";
+	acc.x = -(forceDrag.x / mass);
 
-	acc_x = -(forceDrag.x / mass);
-	if (learpVel.y > 0)
+	if (this->learpVel.y > 0)
 	{
-		acc_y = -((gravity + forceDrag.y) / mass);
+		acc.y = -((gravity + forceDrag.y) / mass);
 	}
 	else
 	{
-		acc_y = ((gravity - forceDrag.y) / mass);
+		acc.y = ((gravity - forceDrag.y) / mass);
 	}
 
 	// v sqrt(2a + u2)
-	float t_velX, t_velY;
-	if (learpVel.x < 0)
+
+	if (this->learpVel.x < 0)
 	{
-		t_velX = -(powf(learpVel.x, 2.f) + (2.f * acc_x));
+		tempVel.x = -(powf(this->learpVel.x, 2.f) + (2.f * acc.x));
 	}
 	else
 	{
-		t_velX = powf(learpVel.x, 2.f) + (2.f * acc_x);
+		tempVel.x = powf(this->learpVel.x, 2.f) + (2.f * acc.x);
 	}
-	if (learpVel.y < 0)
+	if (this->learpVel.y < 0)
 	{
-		t_velY = -(powf(learpVel.y, 2.f) + (2.f * acc_y));
+		tempVel.y = -(powf(this->learpVel.y, 2.f) + (2.f * acc.y));
 	}
 	else
 	{
-		t_velY = powf(learpVel.y, 2.f) + (2.f * acc_y);
+		tempVel.y = powf(this->learpVel.y, 2.f) + (2.f * acc.y);
 	}
 
-	if (t_velX > 0)
+	if (tempVel.x > 0)
 	{
-		learpVel.x = sqrt(t_velX);
+		this->learpVel.x = sqrt(tempVel.x);
 	}
 	else
 	{
-		learpVel.x = -sqrt(-t_velX);
+		this->learpVel.x = -sqrt(-tempVel.x);
 	}
-	if (t_velY > 0)
+	if (tempVel.y > 0)
 	{
-		learpVel.y = sqrt(t_velY);
+		this->learpVel.y = sqrt(tempVel.y);
 	}
 	else
 	{
-		learpVel.y = -sqrt(-t_velY);
+		this->learpVel.y = -sqrt(-tempVel.y);
 	}
 }
 
@@ -136,14 +136,14 @@ void Physics::pollEvents()
 
 void Physics::spawnBall()
 {
-	this->ball.setPosition(0.f, 710.f);
+	this->ball.setPosition(30.f, 670.f);
 	this->ball.setFillColor(sf::Color::Blue);
-	vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
+	this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
 }
 
 void Physics::updateBall()
 {
-	std::cout << vel.x << " " << vel.y << "\n";
+	std::cout << this->vel.x << " " << this->vel.y << "\n";
 
 
 	if (counter > 10)
@@ -158,15 +158,15 @@ void Physics::updateBall()
 			this->updateMotion();
 		}
 			
-		vel.x += (learpVel.x - vel.x) /10;
-		vel.y += (learpVel.y - vel.y) /10;
+		this->vel.x += (this->learpVel.x - this->vel.x) / scale;
+		this->vel.y += (this->learpVel.y - this->vel.y) / scale;
 
 		counter++;
 	}
 
 
-	this->ball.move(sf::Vector2f(vel.x, -vel.y));
-	vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
+	this->ball.move(sf::Vector2f(this->vel.x, -this->vel.y));
+	this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
 }
 
 void Physics::update()
@@ -180,7 +180,7 @@ void Physics::update()
 
 void Physics::renderBall()
 {
-	this->window->draw(&vertices[0], vertices.size(), sf::Lines);
+	this->window->draw(&vertices[0], this->vertices.size(), sf::Lines);
 	this->window->draw(ball);
 }
 
