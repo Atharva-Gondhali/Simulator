@@ -14,7 +14,7 @@ void Physics::initVariable()
 	this->ball.setRadius(10.f);
 	scale = 6;
 	vel = 20.f;
-	angle = 45.f;
+	angle = 60.f;
 	velX = vel * cos(angle * (3.14f / 180.f));
 	velY = vel * sin(angle * (3.14f / 180.f));
 	mass = 1.f;
@@ -48,7 +48,7 @@ void Physics::updateMotion()
 		forceDrag_y = 6.f * pi * viscosity * (diameter / 2.f) * velY;
 	}
 
-	std::cout << forceDrag_x << " " << forceDrag_y << " " << gravity << "\n";
+	//std::cout << forceDrag_x << " " << forceDrag_y << " " << gravity << "\n";
 
 	acc_x = -(forceDrag_x / mass);
 	if (velY > 0)
@@ -137,19 +137,21 @@ void Physics::spawnBall()
 {
 	this->ball.setPosition(0.f, 720.f);
 	this->ball.setFillColor(sf::Color::Blue);
+	vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
 }
 
 void Physics::updateBall()
 {
-	std::cout << velX << " " << velY << "\n";
+	//std::cout << velX << " " << velY << "\n";
     this->updateMotion();
 	this->ball.move(sf::Vector2f(velX / 6 + scale, -(velY / 6 + scale)));
+	vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
 }
 
 void Physics::update()
 {
 	this->pollEvents();
-	if (start == true)
+	if (start)
 	{
 		this->updateBall();
 	}
@@ -157,6 +159,7 @@ void Physics::update()
 
 void Physics::renderBall()
 {
+	this->window->draw(&vertices[0], vertices.size(), sf::Lines);
 	this->window->draw(ball);
 }
 

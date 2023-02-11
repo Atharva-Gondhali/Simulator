@@ -15,6 +15,7 @@ private:
 	sf::Event ev;
 	sf::ContextSettings settings;
 	sf::CircleShape ball;
+	std::vector<sf::Vertex> vertices;
 
 	bool start = false;
 
