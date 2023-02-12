@@ -12,8 +12,8 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	mass = 1.f;
-	angle = 45.f;
-	mainVel = 70.f * (5.f / 18.f);
+	angle = 30.f;
+	mainVel = 98.f * (5.f / 18.f);
 	diameter = 0.08f;
 	densityAir = 1.29f;
 	gravity = mass * 9.8f;
@@ -142,13 +142,17 @@ void Physics::spawnBall()
 
 void Physics::updateBall()
 {
-	this->updateMotion();
-	this->vel.x += (this->learpVel.x - this->vel.x) / 60;
-	this->vel.y += (this->learpVel.y - this->vel.y) / 60;
+	if (this->ball.getPosition().x + 20 <= 1280 &&
+		this->ball.getPosition().y + 10 <= 680)
+	{
+		this->updateMotion();
+		this->vel.x += (this->learpVel.x - this->vel.x) / 60;
+		this->vel.y += (this->learpVel.y - this->vel.y) / 60;
 
-	std::cout << this->vel.x << " " << this->vel.y << "\n";
-	this->ball.move(sf::Vector2f(this->vel.x, -this->vel.y));
-	this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
+		std::cout << this->vel.x << " " << this->vel.y << "\n";
+		this->ball.move(sf::Vector2f(this->vel.x, -this->vel.y));
+		this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
+	}
 }
 
 void Physics::update()
