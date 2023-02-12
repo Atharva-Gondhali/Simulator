@@ -168,11 +168,41 @@ void Physics::renderBall()
 
 void Physics::renderGrid()
 {
+	sf::Vertex lines[4];
+	sf::Vertex triangles[6];
+
+	lines[0].position = sf::Vector2f(40, 680);
+	lines[1].position = sf::Vector2f(1240, 680);
+	lines[2].position = sf::Vector2f(40, 680);
+	lines[3].position = sf::Vector2f(40, 30);
+
+	lines[0].color = sf::Color::White;
+	lines[1].color = sf::Color::White;
+	lines[2].color = sf::Color::White;
+	lines[3].color = sf::Color::White;
+
+	triangles[0].position = sf::Vector2f(1240, 680);
+	triangles[1].position = sf::Vector2f(1230, 685);
+	triangles[2].position = sf::Vector2f(1230, 675);
+	triangles[3].position = sf::Vector2f(40, 30);
+	triangles[4].position = sf::Vector2f(45, 40);
+	triangles[5].position = sf::Vector2f(35, 40);
+
+	triangles[0].color = sf::Color::White;
+	triangles[1].color = sf::Color::White;
+	triangles[2].color = sf::Color::White;
+	triangles[3].color = sf::Color::White;
+	triangles[4].color = sf::Color::White;
+	triangles[5].color = sf::Color::White;
+
+	this->window->draw(triangles, 6, sf::Triangles);
+	this->window->draw(lines, 4, sf::Lines);
 }
 
 void Physics::render()
 {
 	this->window->clear();
+	this->renderGrid();
 	this->renderBall();
 	this->window->display();
 }
