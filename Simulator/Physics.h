@@ -43,7 +43,10 @@ private:
 
 	void spawnBall();
 	void updateBall();
+
 	void renderBall();
+	void renderGrid();
+
 	void pollEvents();
 
 public:

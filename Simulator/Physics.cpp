@@ -166,6 +166,10 @@ void Physics::renderBall()
 	this->window->draw(ball);
 }
 
+void Physics::renderGrid()
+{
+}
+
 void Physics::render()
 {
 	this->window->clear();
