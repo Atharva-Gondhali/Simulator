@@ -14,6 +14,10 @@ private:
 	sf::ContextSettings settings;
 	std::vector<sf::Vertex> vertices;
 
+
+	sf::Vertex lines[4];
+	sf::Vertex triangles[6];
+
 	int counter = 0;
 	bool start = false;
 
@@ -43,6 +47,7 @@ private:
 
 	void spawnBall();
 	void updateBall();
+	void updateGrid(sf::Vector2f moveH, sf::Vector2f moveV);
 
 	void renderBall();
 	void renderGrid();
