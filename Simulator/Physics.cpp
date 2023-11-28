@@ -12,8 +12,8 @@ void Physics::initWindow()
 void Physics::initVariable()
 {
 	mass = 1.f;
-	angle = 30.f;
-	mainVel = 120.f * (5.f / 18.f);
+	angle = 45.f;
+	mainVel = 100.f * (5.f / 18.f);
 	diameter = 0.08f;
 	densityAir = 1.29f;
 	gravity = mass * 9.8f;
@@ -109,6 +109,55 @@ void Physics::updateMotion()
 	}
 }
 
+void Physics::updateState()
+{
+	if (this->ball.getPosition().x < 1024 &&
+		this->ball.getPosition().y > 30)
+	{
+		frameState = 3;
+	}
+	else if (this->ball.getPosition().x > 1024 && this->ball.getPosition().y > 30)
+	{
+		frameState = 1;
+	}
+	else if (this->ball.getPosition().y < 30 && this->ball.getPosition().x < 1024)
+	{
+		if ((this->lines[0].position.y + this->vel.y) < 680)
+		{
+			if (this->lines[0].position.y != 680)
+			{
+				frameState = 4;
+			}
+			else
+			{
+				frameState = 3;
+			}
+		}
+		else
+		{
+			frameState = 2;
+		}
+	}
+	else
+	{
+		if ((this->lines[0].position.y + this->vel.y) < 680)
+		{
+			if (this->lines[0].position.y != 680)
+			{
+				frameState = 4;
+			}
+			else
+			{
+				frameState = 1;
+			}
+		}
+		else
+		{
+			frameState = 0;
+		}
+	}
+}
+
 Physics::Physics()
 {
 	this->initVariable();
@@ -156,49 +205,101 @@ void Physics::updateBall()
 {
 	if (this->ball.getPosition().y + 10 <= 680)
 	{
-		if (this->ball.getPosition().x + 20 >= 1024)
+		this->updateMotion();
+		this->updateState();
+		std::cout << frameState << std::endl;
+
+		this->vel.x += (this->learpVel.x - this->vel.x) / 60;
+		this->vel.y += (this->learpVel.y - this->vel.y) / 60;
+		
+		switch (frameState)
 		{
-			this->updateMotion();
-			this->vel.x += (this->learpVel.x - this->vel.x) / 60;
-			this->vel.y += (this->learpVel.y - this->vel.y) / 60;
-
-			this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
-
-			this->updateGrid(sf::Vector2f(vel.x, 0.0f), sf::Vector2f(0.f, 0.0f));
-
-			this->ball.move(sf::Vector2f(0.f, -this->vel.y));
-
-		}
-		else
-		{
-			this->updateMotion();
-			this->vel.x += (this->learpVel.x - this->vel.x) / 60;
-			this->vel.y += (this->learpVel.y - this->vel.y) / 60;
-
+		case 3:
 			this->ball.move(sf::Vector2f(this->vel.x, -this->vel.y));
-			this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
+			break;
+		case 1:
+			this->ball.move(sf::Vector2f(0.0f, -this->vel.y));
+			break;
+		case 2:
+			this->ball.move(sf::Vector2f(this->vel.x, 0.0f));
+			break;
+		case 0:
+			break;
+		default:
+			float diff;
+			diff = this->lines[0].position.y - 680;
+			this->ball.move(sf::Vector2f(0.0f, diff));
 		}
+		this->vertices.push_back(sf::Vertex(sf::Vector2f(this->ball.getPosition().x + 10, this->ball.getPosition().y + 10), sf::Color::White));
 	}
 }
 
-void Physics::updateGrid(sf::Vector2f moveH, sf::Vector2f moveV)
+void Physics::updateGrid()
 {
-	for (int i = 0; i < this->vertices.size(); i++)
+	switch (frameState)
 	{
-		this->vertices[i].position -= moveH;
-	}
+	case 3:
+		break;
+	case 1:
+		for (int i = 0; i < this->vertices.size(); i++)
+		{
+			this->vertices[i].position -= sf::Vector2f(this->vel.x, 0.0f);
+		}
 
-	this->lines[0].position -= moveV;
-	this->lines[1].position -= moveV;
-	this->lines[2].position -= moveH;
-	this->lines[3].position -= moveH;
+		this->lines[2].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->lines[3].position -= sf::Vector2f(this->vel.x, 0.0f);
 
-	this->triangles[0].position -= moveV;
-	this->triangles[1].position -= moveV;
-	this->triangles[2].position -= moveV;
-	this->triangles[3].position -= moveH;
-	this->triangles[4].position -= moveH;
-	this->triangles[5].position -= moveH;
+		this->triangles[3].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->triangles[4].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->triangles[5].position -= sf::Vector2f(this->vel.x, 0.0f);
+		break;
+	case 2:
+		for (int i = 0; i < this->vertices.size(); i++)
+		{
+			this->vertices[i].position -= sf::Vector2f(0.0f, -this->vel.y);
+		}
+
+		this->lines[0].position -= sf::Vector2f(0.0f, -this->vel.y);
+		this->lines[1].position -= sf::Vector2f(0.0f, -this->vel.y);
+
+		this->triangles[0].position -= sf::Vector2f(0.0f, -this->vel.y);
+		this->triangles[1].position -= sf::Vector2f(0.0f, -this->vel.y);
+		this->triangles[2].position -= sf::Vector2f(0.0f, -this->vel.y);
+		break;
+	case 0:
+		for (int i = 0; i < this->vertices.size(); i++)
+		{
+			this->vertices[i].position -= sf::Vector2f(this->vel.x, -this->vel.y);
+		}
+
+		this->lines[2].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->lines[3].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->lines[0].position -= sf::Vector2f(0.0f, -this->vel.y);
+		this->lines[1].position -= sf::Vector2f(0.0f, -this->vel.y);
+
+		this->triangles[3].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->triangles[4].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->triangles[5].position -= sf::Vector2f(this->vel.x, 0.0f);
+		this->triangles[0].position -= sf::Vector2f(0.0f, -this->vel.y);
+		this->triangles[1].position -= sf::Vector2f(0.0f, -this->vel.y);
+		this->triangles[2].position -= sf::Vector2f(0.0f, -this->vel.y);
+		break;
+	default:
+		float diff;
+		diff = this->lines[0].position.y - 680;
+
+		for (int i = 0; i < this->vertices.size(); i++)
+		{
+			this->vertices[i].position += sf::Vector2f(0.0f, -diff);
+		}
+
+		this->lines[0].position += sf::Vector2f(0.0f, -diff);
+		this->lines[1].position += sf::Vector2f(0.0f, -diff);
+
+		this->triangles[0].position += sf::Vector2f(0.0f, -diff);
+		this->triangles[1].position += sf::Vector2f(0.0f, -diff);
+		this->triangles[2].position += sf::Vector2f(0.0f, -diff);
+	}	
 }
 
 void Physics::update()
@@ -207,6 +308,7 @@ void Physics::update()
 	if (start)
 	{
 		this->updateBall();
+		this->updateGrid();
 	}
 }
 

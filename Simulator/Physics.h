@@ -18,8 +18,8 @@ private:
 	sf::Vertex lines[4];
 	sf::Vertex triangles[6];
 
-	int counter = 0;
 	bool start = false;
+	int frameState = 0;
 
 	float angle;
 	float mainVel;
@@ -44,10 +44,11 @@ private:
 	void initVariable();
 
 	void updateMotion();
+	void updateState();
 
 	void spawnBall();
 	void updateBall();
-	void updateGrid(sf::Vector2f moveH, sf::Vector2f moveV);
+	void updateGrid();
 
 	void renderBall();
 	void renderGrid();
